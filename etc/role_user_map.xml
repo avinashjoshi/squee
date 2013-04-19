@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Groups>
+    <Group ID="a">
+        <Member>a</Member>
+        <Member>b</Member>
+        <Member>c</Member>
+    </Group>
+    <Group ID="admin">
+        <Member>admin</Member>
+        <Member>avinash</Member>
+        <Member>avinash1</Member>
+        <Member>admin1</Member>
+    </Group>
+    <Group ID="">
+        <Member>avinash</Member>
+    </Group>
+    <Group ID="avinash">
+        <Member>avinash</Member>
+        <Member>avinash1</Member>
+        <Member>avinash11</Member>
+    </Group>
+</Groups>

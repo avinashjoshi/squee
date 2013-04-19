@@ -4,17 +4,117 @@
  */
 package com.utd.scc.squee.view;
 
+import com.utd.scc.squee.action.LoginAction;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author avinash
  */
-public class LoginForm extends javax.swing.JFrame {
+public final class LoginForm extends javax.swing.JFrame {
 
     /**
      * Creates new form LoginForm
      */
+    HashMap<String, String> userDetails = new HashMap<String, String>();
+    File fd;
+    private Pattern pattern;
+    private Matcher matcher;
+    private static final String USERNAME_PATTERN = "^[a-z0-9_-]{3,15}$";
+
     public LoginForm() {
         initComponents();
+        myInitComponents();
+    }
+
+    public void myInitComponents() {
+        clearErrorMessage();
+        fd = new File("etc/passwd");
+        if (!fd.exists()) {
+            try {
+                fd.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        readPasswdFile();
+        login.addActionListener(new LoginAction(this));
+    }
+
+    public void readPasswdFile() {
+        try {
+            FileReader fileReader = new FileReader(fd);
+            BufferedReader bufFileReader = new BufferedReader(fileReader);
+            String line;
+
+            while ((line = bufFileReader.readLine()) != null) {
+                String[] splitLine = line.split(":");
+                userDetails.put(splitLine[0], splitLine[1]);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LoginAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public File getFD() {
+        return fd;
+    }
+
+    public void setUserToPass(String u, String p) {
+        userDetails.put(u, p);
+    }
+
+    public String getLoadedPassword(String u) {
+        return userDetails.get(u);
+    }
+
+    public String getUserNameField() {
+        return usernameField.getText();
+    }
+
+    public String getPasswordField() {
+        return new String(passwordField.getPassword());
+    }
+
+    public boolean checkUserName(String username) {
+        pattern = Pattern.compile(USERNAME_PATTERN);
+        matcher = pattern.matcher(username);
+        return matcher.matches();
+
+    }
+
+    public String validateInput() {
+        if (getUserNameField().equals("")
+                || getPasswordField().equals("")) {
+            return "Both Fields necessary!";
+        } else if (checkUserName(getUserNameField()) == false)  {
+            return "Username can be only have:\n [a-z], [0-9], _ or - ";
+        } else {
+            return "";
+        }
+    }
+
+    public void setErrorMessage(String message) {
+        errorMsg.setVisible(true);
+        errorMsg.setText("");
+        errorMsg.setText("* " + message);
+    }
+
+    public void clearErrorMessage() {
+        errorMsg.setText("");
+        errorMsg.setVisible(false);
     }
 
     /**
@@ -27,11 +127,12 @@ public class LoginForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        usernameText = new javax.swing.JTextField();
-        passwordText = new javax.swing.JTextField();
+        usernameField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        loginButton = new javax.swing.JButton();
+        login = new javax.swing.JButton();
+        passwordField = new javax.swing.JPasswordField();
+        errorMsg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Squee | Login");
@@ -41,15 +142,22 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setText("Secure Query Execution Engine");
 
-        usernameText.setToolTipText("Username");
-
-        passwordText.setToolTipText("Password");
+        usernameField.setToolTipText("Username");
 
         jLabel2.setText("Username:");
 
         jLabel3.setText("Password:");
 
-        loginButton.setText("Login");
+        login.setText("Login");
+
+        passwordField.setToolTipText("Password");
+        passwordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                passwordFieldKeyReleased(evt);
+            }
+        });
+
+        errorMsg.setForeground(new java.awt.Color(255, 0, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -63,16 +171,19 @@ public class LoginForm extends javax.swing.JFrame {
                         .addContainerGap(58, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(loginButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(login)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(usernameText)
-                                    .addComponent(passwordText, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))))
+                                    .addComponent(usernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                                    .addComponent(passwordField)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(errorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(128, 128, 128))))
         );
         layout.setVerticalGroup(
@@ -82,19 +193,29 @@ public class LoginForm extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usernameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passwordText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(loginButton)
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addComponent(login)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void passwordFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyReleased
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == 10) {
+            this.login.doClick();
+
+        }
+    }//GEN-LAST:event_passwordFieldKeyReleased
 
     /**
      * @param args the command line arguments
@@ -131,11 +252,12 @@ public class LoginForm extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel errorMsg;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JButton loginButton;
-    private javax.swing.JTextField passwordText;
-    private javax.swing.JTextField usernameText;
+    private javax.swing.JButton login;
+    private javax.swing.JPasswordField passwordField;
+    private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 }

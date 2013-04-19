@@ -1,3 +1,5 @@
+package com.utd.scc.squee.policy;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,22 +49,22 @@ public class AdminFunctions {
 		
 	}
 	
-	public static void main(String[] args){
-		String role =  "manager";
-		String role2 = "Submanager";
-		AdminFunctions admin =  new AdminFunctions("G:\\Spring Classes\\Sanda\\groups.xml", null);
-		try {
-//			admin.addRole(role);
-//			admin.addRole(role2);
-			admin.addUserToRole("manager", "admin");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+//	public static void main(String[] args){
+//		String role =  "manager";
+//		String role2 = "Submanager";
+//		AdminFunctions admin =  new AdminFunctions("G:\\Spring Classes\\Sanda\\groups.xml", null);
+//		try {
+////			admin.addRole(role);
+////			admin.addRole(role2);
+//			admin.addUserToRole("manager", "admin");
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//	}
 	
 }

@@ -1,3 +1,5 @@
+package com.utd.scc.squee.policy;
+
 
 /*
  * @(#)TimeInRangeFunction.java

@@ -4,6 +4,20 @@
  */
 package com.utd.scc.squee.view;
 
+import com.utd.scc.squee.crypto.SHA;
+import com.utd.scc.squee.policy.AdminFunctions;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author avinash
@@ -13,8 +27,11 @@ public class AdminForm extends javax.swing.JFrame {
     /**
      * Creates new form AdminForm
      */
-    public AdminForm() {
+    LoginForm lForm;
+
+    public AdminForm(LoginForm lForm) {
         initComponents();
+        this.lForm = lForm;
     }
 
     /**
@@ -26,56 +43,355 @@ public class AdminForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jComboBox2 = new javax.swing.JComboBox();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        listUsersPane = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        refreshUserList = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jLabel8 = new javax.swing.JLabel();
+        addUserPane = new javax.swing.JPanel();
+        newUserName = new javax.swing.JTextField();
+        addUser = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        newPassword = new javax.swing.JTextField();
+        newRole = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        errorMsg = new javax.swing.JLabel();
+        permissionsPane = new javax.swing.JPanel();
+        resources = new javax.swing.JComboBox();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        update = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        logout = new javax.swing.JButton();
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel2.setText("Users:");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setEnabled(false);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        refreshUserList.setText("Refresh");
+        refreshUserList.setToolTipText("Click here to refresh users list");
+
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jTextArea2.setEnabled(false);
+        jScrollPane3.setViewportView(jTextArea2);
+
+        jLabel8.setText("Roles:");
+
+        javax.swing.GroupLayout listUsersPaneLayout = new javax.swing.GroupLayout(listUsersPane);
+        listUsersPane.setLayout(listUsersPaneLayout);
+        listUsersPaneLayout.setHorizontalGroup(
+            listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(listUsersPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(listUsersPaneLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                        .addComponent(refreshUserList))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        listUsersPaneLayout.setVerticalGroup(
+            listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(listUsersPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refreshUserList)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("List Users", listUsersPane);
+
+        newUserName.setToolTipText("Enter the username");
+
+        addUser.setText("Add User");
+        addUser.setToolTipText("Add a new user");
+        addUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUserActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("UserName:");
+
+        jLabel4.setText("Password:");
+
+        newPassword.setToolTipText("Enter password");
+
+        newRole.setToolTipText("Enter existing or new role");
+
+        jLabel5.setText("Role:");
+
+        errorMsg.setForeground(new java.awt.Color(255, 0, 0));
+
+        javax.swing.GroupLayout addUserPaneLayout = new javax.swing.GroupLayout(addUserPane);
+        addUserPane.setLayout(addUserPaneLayout);
+        addUserPaneLayout.setHorizontalGroup(
+            addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addUserPaneLayout.createSequentialGroup()
+                .addGroup(addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(addUserPaneLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)
+                        .addGroup(addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(newPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
+                            .addComponent(newUserName, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(newRole)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addUserPaneLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addUser)))
+                .addContainerGap())
+            .addGroup(addUserPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(104, Short.MAX_VALUE))
+        );
+        addUserPaneLayout.setVerticalGroup(
+            addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addUserPaneLayout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addGroup(addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addGroup(addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(newPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addComponent(addUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Add User to Role", addUserPane);
+
+        resources.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select one --", "Student", "Faculty", "Courses" }));
+
+        jScrollPane2.setViewportView(jList1);
+
+        jLabel6.setText("Resource:");
+
+        jLabel7.setText("Roles:");
+
+        update.setText("Update Permissions");
+        update.setToolTipText("Update the permissions for selected resource");
+
+        javax.swing.GroupLayout permissionsPaneLayout = new javax.swing.GroupLayout(permissionsPane);
+        permissionsPane.setLayout(permissionsPaneLayout);
+        permissionsPaneLayout.setHorizontalGroup(
+            permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(permissionsPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(permissionsPaneLayout.createSequentialGroup()
+                        .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(resources, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                            .addGroup(permissionsPaneLayout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, permissionsPaneLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(update)))
+                .addContainerGap())
+        );
+        permissionsPaneLayout.setVerticalGroup(
+            permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(permissionsPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(resources, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(update)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Permissions", permissionsPane);
+
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
+        jLabel1.setText("Admin UI");
+
+        logout.setText("Logout");
+        logout.setToolTipText("Click here to Logout");
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jTabbedPane1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(134, 134, 134)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logout)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(logout))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        lForm.setVisible(true);
+    }//GEN-LAST:event_logoutActionPerformed
+
+    public void setErrorMessage(String message) {
+        errorMsg.setVisible(true);
+        errorMsg.setText("");
+        errorMsg.setText("* " + message);
+    }
+
+    public void clearErrorMessage() {
+        errorMsg.setText("");
+        errorMsg.setVisible(false);
+    }
+
+    private void addUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserActionPerformed
+        try {
+            // TODO add your handling code here:
+            String userName = newUserName.getText();
+            String password = newPassword.getText();
+            String role = newRole.getText();
+            String passwordHash = SHA.SHA512String(password);
+
+            clearErrorMessage();
+
+            if ("".equals(userName)
+                    || "".equals(password)
+                    || "".equals(role)) {
+                setErrorMessage("All Fields necessary!");
+            } else if (lForm.checkUserName(userName) == false) {
+                setErrorMessage("Username can be only have:\n [a-z], [0-9], _ or - ");
+                newUserName.requestFocus();
+            } else if (lForm.checkUserName(role) == false) {
+                setErrorMessage("Role can be only have:\n [a-z], [0-9], _ or - ");
+                newRole.requestFocus();
+            } else {
+
+                String msg = "";
+                // If user is not admin and not in the loaded list
+                if ((lForm.getLoadedPassword(userName) == null)
+                        && (!userName.equals("admin"))) {
+
+                    //add to etc/passwd file
+                    FileWriter fileWriter = new FileWriter(lForm.getFD(), true);
+                    BufferedWriter bufWriter = new BufferedWriter(fileWriter);
+                    bufWriter.write(userName + ":" + passwordHash + "\n");
+                    lForm.setUserToPass(userName, passwordHash);
+                    bufWriter.close();
+                    fileWriter.close();
+                    msg = "Added new user to file! ";
+                }
+
+                //call AdminFunction.add
+                AdminFunctions admin = new AdminFunctions("etc/role_user_map.xml", null);
+                admin.addUserToRole(role, userName);
+                setErrorMessage(msg + "Added user to role!");
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_addUserActionPerformed
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AdminForm().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addUser;
+    private javax.swing.JPanel addUserPane;
+    private javax.swing.JLabel errorMsg;
+    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JList jList1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JPanel listUsersPane;
+    private javax.swing.JButton logout;
+    private javax.swing.JTextField newPassword;
+    private javax.swing.JTextField newRole;
+    private javax.swing.JTextField newUserName;
+    private javax.swing.JPanel permissionsPane;
+    private javax.swing.JButton refreshUserList;
+    private javax.swing.JComboBox resources;
+    private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 }

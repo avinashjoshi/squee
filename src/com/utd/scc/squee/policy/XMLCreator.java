@@ -1,3 +1,5 @@
+package com.utd.scc.squee.policy;
+
 
 
 
@@ -162,7 +164,7 @@ public class XMLCreator {
 			// to generate a file output use fileoutputstream instead of
 			// system.out
 			XMLSerializer serializer = new XMLSerializer(new FileOutputStream(
-					new File("G:\\Spring Classes\\Sanda\\groups.xml")), format);
+					new File("etc/role_user_map.xml")), format);
 
 			serializer.serialize(dom);
 
