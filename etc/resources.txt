@@ -1,3 +1,4 @@
-studentFile
-facultyFile
-coursesFile
+students
+faculty
+courses
+grades

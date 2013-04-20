@@ -23,4 +23,7 @@
         <Member>avinash</Member>
         <Member>avinash4</Member>
     </Group>
+    <Group ID="staff">
+        <Member>avinash</Member>
+    </Group>
 </Groups>

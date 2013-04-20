@@ -44,7 +44,8 @@ public class AdminForm extends javax.swing.JFrame {
         refreshUserRole();
         loadResources();
         listModel = new DefaultListModel();
-        roleList = new JList(listModel);
+        roleList.setModel(listModel);
+        
         loadRoles();
     }
 
@@ -114,7 +115,8 @@ public class AdminForm extends javax.swing.JFrame {
 
     public void loadRoles() {
         roleListArea.setText("");
-        roleList.removeAll();
+        //roleList.removeAll();
+        listModel.clear();
         AdminFunctions admin = new AdminFunctions("etc/role_user_map.xml", null);
         ArrayList<Group> listGroups = admin.getLoadDataXml().getGroups();
         int i;
@@ -123,6 +125,7 @@ public class AdminForm extends javax.swing.JFrame {
             roleListArea.append(listGroups.get(i).getGroupID() + "\n");
             listModel.addElement(listGroups.get(i).getGroupID());
         }
+        
     }
 
     /**
@@ -140,7 +143,6 @@ public class AdminForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         userListArea = new javax.swing.JTextArea();
-        refreshUserList = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         roleListArea = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
@@ -163,6 +165,7 @@ public class AdminForm extends javax.swing.JFrame {
         permErrMsg = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         logout = new javax.swing.JButton();
+        refreshUserList = new javax.swing.JButton();
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -183,14 +186,6 @@ public class AdminForm extends javax.swing.JFrame {
         userListArea.setRows(3);
         userListArea.setEnabled(false);
         jScrollPane1.setViewportView(userListArea);
-
-        refreshUserList.setText("Refresh");
-        refreshUserList.setToolTipText("Click here to refresh users list");
-        refreshUserList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshUserListActionPerformed(evt);
-            }
-        });
 
         roleListArea.setEditable(false);
         roleListArea.setBackground(new java.awt.Color(255, 255, 255));
@@ -215,9 +210,8 @@ public class AdminForm extends javax.swing.JFrame {
                 .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(listUsersPaneLayout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
-                        .addComponent(refreshUserList))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
                 .addContainerGap())
         );
         listUsersPaneLayout.setVerticalGroup(
@@ -225,12 +219,11 @@ public class AdminForm extends javax.swing.JFrame {
             .addGroup(listUsersPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(refreshUserList)
                     .addComponent(jLabel2)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
                 .addContainerGap())
         );
@@ -376,19 +369,27 @@ public class AdminForm extends javax.swing.JFrame {
             }
         });
 
+        refreshUserList.setText("Refresh");
+        refreshUserList.setToolTipText("Click here to refresh users list");
+        refreshUserList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshUserListActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(listTab)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(listTab))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(134, 134, 134)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(refreshUserList)
+                        .addGap(18, 18, 18)
                         .addComponent(logout)))
                 .addContainerGap())
         );
@@ -398,7 +399,8 @@ public class AdminForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(logout))
+                    .addComponent(logout)
+                    .addComponent(refreshUserList))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(listTab, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -469,6 +471,7 @@ public class AdminForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         refreshUserRole();
         loadRoles();
+        loadResources();
     }//GEN-LAST:event_refreshUserListActionPerformed
 
     private void listTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listTabMouseClicked
