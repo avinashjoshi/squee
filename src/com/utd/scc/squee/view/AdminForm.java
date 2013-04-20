@@ -118,7 +118,7 @@ public class AdminForm extends javax.swing.JFrame {
         AdminFunctions admin = new AdminFunctions("etc/role_user_map.xml", null);
         ArrayList<Group> listGroups = admin.getLoadDataXml().getGroups();
         int i;
-        System.out.println(listGroups.size());
+        
         for (i = 0; i < listGroups.size(); i++) {
             roleListArea.append(listGroups.get(i).getGroupID() + "\n");
             listModel.addElement(listGroups.get(i).getGroupID());
