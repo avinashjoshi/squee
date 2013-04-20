@@ -1,0 +1,4 @@
+A = LOAD 'faculty.lst' using PigStorage(',');
+B = LOAD 'courses.lst' using PigStorage(',');
+C = JOIN A by $0, B by $2;
+D = FOREACH C GENERATE $0, $5;
