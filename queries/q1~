@@ -1,0 +1,6 @@
+A = LOAD 'students.lst' using PigStorage(',') as (name:chararray, email:chararray, idnum:int, major:chararray, level:chararray);
+B = LOAD 'grades.lst' using PigStorage(',') as (sidnum:int, gradeval:float);
+X = JOIN A by idnum, B by sidnum;
+Y = FILTER X by (gradeval >= 3.0);
+Z = FOREACH Y GENERATE name, gradeval;
+DUMP Z;

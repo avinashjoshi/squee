@@ -6,6 +6,7 @@ package com.utd.scc.squee;
 
 import com.utd.itc.godse.helper.UIHelper;
 import com.utd.scc.squee.view.LoginForm;
+import com.utd.scc.squee.pigexecute.PigExecute;
 
 /**
  *
@@ -14,8 +15,17 @@ import com.utd.scc.squee.view.LoginForm;
 public class Squee {
 
     public static void main(String[] args) {
+        
+        /*
+         * Pass the index of the query to be executed.
+         * Reads from queries/ folder.
+         * Output stored in output/ and dumped to stdout
+         */
+        PigExecute.testPigExecute(4);
+        
+        
         UIHelper.setTitle("GODSe");
         LoginForm loginForm = new LoginForm();
         loginForm.setVisible(true);
-    }
+    }// main()
 }

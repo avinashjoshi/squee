@@ -1,0 +1,2 @@
+A = LOAD 'courses.lst' using PigStorage(',');
+B = FOREACH A GENERATE $0, $1, $2;
