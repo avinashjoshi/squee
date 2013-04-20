@@ -9,13 +9,7 @@ import com.utd.scc.squee.view.AdminForm;
 import com.utd.scc.squee.view.LoginForm;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -19,6 +19,7 @@ public class AdminFunctions {
 		this.xmlFileName = xmFile;
 		this.textFileName = textFile ;
 		loadDataXml =  new LoadDataXML(xmlFileName, textFileName );
+                loadDataXml.loadDataFromXML();
 		memberForTheRole = new ArrayList<Member>();
 		role = new ArrayList<Group>();
 	}
@@ -27,9 +28,9 @@ public class AdminFunctions {
 		//this.role =  new Group(memberForTheRole, role);
 		Group newRoleGroup =  new Group(memberForTheRole, newRole);
 		role.add(newRoleGroup);
-		loadDataXml.setNewGroupsToAdd(role);
-		loadDataXml.run();
-		xmlCreator =  new XMLCreator(loadDataXml.groups);
+		getLoadDataXml().setNewGroupsToAdd(role);
+		getLoadDataXml().run();
+		xmlCreator =  new XMLCreator(getLoadDataXml().groups);
 		xmlCreator.run();
 	}
 	
@@ -38,9 +39,9 @@ public class AdminFunctions {
 		memberForTheRole.add(newMember);
 		Group newRoleGroup =  new Group(memberForTheRole, newRole);
 		role.add(newRoleGroup);
-		loadDataXml.setNewGroupsToAdd(role);
-		loadDataXml.run();
-		xmlCreator =  new XMLCreator(loadDataXml.groups);
+		getLoadDataXml().setNewGroupsToAdd(role);
+		getLoadDataXml().run();
+		xmlCreator =  new XMLCreator(getLoadDataXml().groups);
 		xmlCreator.run();
 		
 	}
@@ -66,5 +67,19 @@ public class AdminFunctions {
 //		}
 //		
 //	}
+
+    /**
+     * @return the loadDataXml
+     */
+    public LoadDataXML getLoadDataXml() {
+        return loadDataXml;
+    }
+
+    /**
+     * @param loadDataXml the loadDataXml to set
+     */
+    public void setLoadDataXml(LoadDataXML loadDataXml) {
+        this.loadDataXml = loadDataXml;
+    }
 	
 }

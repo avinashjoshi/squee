@@ -19,4 +19,8 @@
         <Member>avinash1</Member>
         <Member>avinash11</Member>
     </Group>
+    <Group ID="test">
+        <Member>avinash</Member>
+        <Member>avinash4</Member>
+    </Group>
 </Groups>

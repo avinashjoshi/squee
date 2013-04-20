@@ -26,7 +26,8 @@ public final class LoginForm extends javax.swing.JFrame {
      * Creates new form LoginForm
      */
     HashMap<String, String> userDetails = new HashMap<String, String>();
-    File fd;
+    File passwdFd;
+    File resourceFd;
     private Pattern pattern;
     private Matcher matcher;
     private static final String USERNAME_PATTERN = "^[a-z0-9_-]{3,15}$";
@@ -38,21 +39,23 @@ public final class LoginForm extends javax.swing.JFrame {
 
     public void myInitComponents() {
         clearErrorMessage();
-        fd = new File("etc/passwd");
-        if (!fd.exists()) {
+        passwdFd = new File("etc/passwd");
+        resourceFd = new File("etc/resources.txt");
+        if (!passwdFd.exists()) {
             try {
-                fd.createNewFile();
+                passwdFd.createNewFile();
             } catch (IOException ex) {
-                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
         readPasswdFile();
         login.addActionListener(new LoginAction(this));
     }
 
     public void readPasswdFile() {
         try {
-            FileReader fileReader = new FileReader(fd);
+            FileReader fileReader = new FileReader(passwdFd);
             BufferedReader bufFileReader = new BufferedReader(fileReader);
             String line;
 
@@ -68,8 +71,12 @@ public final class LoginForm extends javax.swing.JFrame {
 
     }
 
-    public File getFD() {
-        return fd;
+    public File getPasswdFD() {
+        return passwdFd;
+    }
+    
+    public File getResourceFD() {
+        return resourceFd;
     }
 
     public void setUserToPass(String u, String p) {
@@ -99,7 +106,7 @@ public final class LoginForm extends javax.swing.JFrame {
         if (getUserNameField().equals("")
                 || getPasswordField().equals("")) {
             return "Both Fields necessary!";
-        } else if (checkUserName(getUserNameField()) == false)  {
+        } else if (checkUserName(getUserNameField()) == false) {
             return "Username can be only have:\n [a-z], [0-9], _ or - ";
         } else {
             return "";

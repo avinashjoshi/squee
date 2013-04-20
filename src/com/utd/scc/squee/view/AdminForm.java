@@ -6,6 +6,7 @@ package com.utd.scc.squee.view;
 
 import com.utd.scc.squee.crypto.SHA;
 import com.utd.scc.squee.policy.AdminFunctions;
+import com.utd.scc.squee.policy.Group;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,9 +15,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.ListModel;
 
 /**
  *
@@ -28,10 +32,97 @@ public class AdminForm extends javax.swing.JFrame {
      * Creates new form AdminForm
      */
     LoginForm lForm;
+    DefaultListModel listModel;
 
     public AdminForm(LoginForm lForm) {
         initComponents();
         this.lForm = lForm;
+        myInitComponents();
+    }
+
+    public final void myInitComponents() {
+        refreshUserRole();
+        loadResources();
+        listModel = new DefaultListModel();
+        roleList = new JList(listModel);
+        loadRoles();
+    }
+
+    public void setAddErrorMessage(String message) {
+        addErrMsg.setVisible(true);
+        addErrMsg.setText("");
+        addErrMsg.setText("* " + message);
+    }
+
+    public void clearErrorMessages() {
+        addErrMsg.setText("");
+        addErrMsg.setVisible(false);
+    }
+
+    public void setPermErrorMessage(String message) {
+        permErrMsg.setVisible(true);
+        permErrMsg.setText("");
+        permErrMsg.setText("* " + message);
+    }
+
+    public void refreshUserRole() {
+        userListArea.setText("");
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(lForm.getPasswdFD());
+            BufferedReader bufFileReader = new BufferedReader(fileReader);
+            String line;
+            while ((line = bufFileReader.readLine()) != null) {
+                String[] splitLine = line.split(":");
+                userListArea.append(splitLine[0] + "\n");
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fileReader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void loadResources() {
+        resources.removeAllItems();
+        resources.addItem("--Select One--");
+        FileReader fileReader;
+        File resourceFd = new File("etc/resources.txt");
+        if (!resourceFd.exists()) {
+            setPermErrorMessage("etc/resources.txt file not found. Please add");
+        } else {
+            try {
+                fileReader = new FileReader(resourceFd);
+                BufferedReader bufFileReader = new BufferedReader(fileReader);
+                String line;
+                while ((line = bufFileReader.readLine()) != null) {
+                    resources.addItem(line);
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void loadRoles() {
+        roleListArea.setText("");
+        roleList.removeAll();
+        AdminFunctions admin = new AdminFunctions("etc/role_user_map.xml", null);
+        ArrayList<Group> listGroups = admin.getLoadDataXml().getGroups();
+        int i;
+        System.out.println(listGroups.size());
+        for (i = 0; i < listGroups.size(); i++) {
+            roleListArea.append(listGroups.get(i).getGroupID() + "\n");
+            listModel.addElement(listGroups.get(i).getGroupID());
+        }
     }
 
     /**
@@ -44,14 +135,14 @@ public class AdminForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jComboBox2 = new javax.swing.JComboBox();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        listTab = new javax.swing.JTabbedPane();
         listUsersPane = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        userListArea = new javax.swing.JTextArea();
         refreshUserList = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        roleListArea = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
         addUserPane = new javax.swing.JPanel();
         newUserName = new javax.swing.JTextField();
@@ -61,14 +152,15 @@ public class AdminForm extends javax.swing.JFrame {
         newPassword = new javax.swing.JTextField();
         newRole = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        errorMsg = new javax.swing.JLabel();
+        addErrMsg = new javax.swing.JLabel();
         permissionsPane = new javax.swing.JPanel();
         resources = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        roleList = new javax.swing.JList();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         update = new javax.swing.JButton();
+        permErrMsg = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         logout = new javax.swing.JButton();
 
@@ -76,20 +168,37 @@ public class AdminForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        listTab.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listTabMouseClicked(evt);
+            }
+        });
+
         jLabel2.setText("Users:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setEnabled(false);
-        jScrollPane1.setViewportView(jTextArea1);
+        userListArea.setEditable(false);
+        userListArea.setBackground(new java.awt.Color(255, 255, 255));
+        userListArea.setColumns(15);
+        userListArea.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        userListArea.setRows(3);
+        userListArea.setEnabled(false);
+        jScrollPane1.setViewportView(userListArea);
 
         refreshUserList.setText("Refresh");
         refreshUserList.setToolTipText("Click here to refresh users list");
+        refreshUserList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshUserListActionPerformed(evt);
+            }
+        });
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jTextArea2.setEnabled(false);
-        jScrollPane3.setViewportView(jTextArea2);
+        roleListArea.setEditable(false);
+        roleListArea.setBackground(new java.awt.Color(255, 255, 255));
+        roleListArea.setColumns(15);
+        roleListArea.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        roleListArea.setRows(5);
+        roleListArea.setEnabled(false);
+        jScrollPane3.setViewportView(roleListArea);
 
         jLabel8.setText("Roles:");
 
@@ -121,12 +230,12 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("List Users", listUsersPane);
+        listTab.addTab("List Users", listUsersPane);
 
         newUserName.setToolTipText("Enter the username");
 
@@ -148,7 +257,7 @@ public class AdminForm extends javax.swing.JFrame {
 
         jLabel5.setText("Role:");
 
-        errorMsg.setForeground(new java.awt.Color(255, 0, 0));
+        addErrMsg.setForeground(new java.awt.Color(255, 0, 0));
 
         javax.swing.GroupLayout addUserPaneLayout = new javax.swing.GroupLayout(addUserPane);
         addUserPane.setLayout(addUserPaneLayout);
@@ -173,7 +282,7 @@ public class AdminForm extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(addUserPaneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(104, Short.MAX_VALUE))
         );
         addUserPaneLayout.setVerticalGroup(
@@ -194,15 +303,15 @@ public class AdminForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(addUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Add User to Role", addUserPane);
+        listTab.addTab("Add User to Role", addUserPane);
 
-        resources.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select one --", "Student", "Faculty", "Courses" }));
+        resources.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select one --" }));
 
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(roleList);
 
         jLabel6.setText("Resource:");
 
@@ -211,6 +320,8 @@ public class AdminForm extends javax.swing.JFrame {
         update.setText("Update Permissions");
         update.setToolTipText("Update the permissions for selected resource");
 
+        permErrMsg.setForeground(new java.awt.Color(255, 0, 0));
+
         javax.swing.GroupLayout permissionsPaneLayout = new javax.swing.GroupLayout(permissionsPane);
         permissionsPane.setLayout(permissionsPaneLayout);
         permissionsPaneLayout.setHorizontalGroup(
@@ -218,6 +329,7 @@ public class AdminForm extends javax.swing.JFrame {
             .addGroup(permissionsPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(permErrMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(permissionsPaneLayout.createSequentialGroup()
                         .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
@@ -246,10 +358,12 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(update)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(permErrMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Permissions", permissionsPane);
+        listTab.addTab("Permissions", permissionsPane);
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setText("Admin UI");
@@ -270,7 +384,7 @@ public class AdminForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jTabbedPane1))
+                        .addComponent(listTab))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(134, 134, 134)
                         .addComponent(jLabel1)
@@ -286,8 +400,8 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(logout))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
+                .addComponent(listTab, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -299,17 +413,6 @@ public class AdminForm extends javax.swing.JFrame {
         lForm.setVisible(true);
     }//GEN-LAST:event_logoutActionPerformed
 
-    public void setErrorMessage(String message) {
-        errorMsg.setVisible(true);
-        errorMsg.setText("");
-        errorMsg.setText("* " + message);
-    }
-
-    public void clearErrorMessage() {
-        errorMsg.setText("");
-        errorMsg.setVisible(false);
-    }
-
     private void addUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserActionPerformed
         try {
             // TODO add your handling code here:
@@ -318,17 +421,17 @@ public class AdminForm extends javax.swing.JFrame {
             String role = newRole.getText();
             String passwordHash = SHA.SHA512String(password);
 
-            clearErrorMessage();
+            clearErrorMessages();
 
             if ("".equals(userName)
                     || "".equals(password)
                     || "".equals(role)) {
-                setErrorMessage("All Fields necessary!");
+                setAddErrorMessage("All Fields necessary!");
             } else if (lForm.checkUserName(userName) == false) {
-                setErrorMessage("Username can be only have:\n [a-z], [0-9], _ or - ");
+                setAddErrorMessage("Username can be only have:\n [a-z], [0-9], _ or - ");
                 newUserName.requestFocus();
             } else if (lForm.checkUserName(role) == false) {
-                setErrorMessage("Role can be only have:\n [a-z], [0-9], _ or - ");
+                setAddErrorMessage("Role can be only have:\n [a-z], [0-9], _ or - ");
                 newRole.requestFocus();
             } else {
 
@@ -338,7 +441,7 @@ public class AdminForm extends javax.swing.JFrame {
                         && (!userName.equals("admin"))) {
 
                     //add to etc/passwd file
-                    FileWriter fileWriter = new FileWriter(lForm.getFD(), true);
+                    FileWriter fileWriter = new FileWriter(lForm.getPasswdFD(), true);
                     BufferedWriter bufWriter = new BufferedWriter(fileWriter);
                     bufWriter.write(userName + ":" + passwordHash + "\n");
                     lForm.setUserToPass(userName, passwordHash);
@@ -350,7 +453,7 @@ public class AdminForm extends javax.swing.JFrame {
                 //call AdminFunction.add
                 AdminFunctions admin = new AdminFunctions("etc/role_user_map.xml", null);
                 admin.addUserToRole(role, userName);
-                setErrorMessage(msg + "Added user to role!");
+                setAddErrorMessage(msg + "Added user to role!");
             }
 
         } catch (FileNotFoundException ex) {
@@ -361,13 +464,25 @@ public class AdminForm extends javax.swing.JFrame {
             Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_addUserActionPerformed
+
+    private void refreshUserListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshUserListActionPerformed
+        // TODO add your handling code here:
+        refreshUserRole();
+        loadRoles();
+    }//GEN-LAST:event_refreshUserListActionPerformed
+
+    private void listTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listTabMouseClicked
+        // TODO add your handling code here:
+        refreshUserRole();
+        loadRoles();
+    }//GEN-LAST:event_listTabMouseClicked
     /**
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel addErrMsg;
     private javax.swing.JButton addUser;
     private javax.swing.JPanel addUserPane;
-    private javax.swing.JLabel errorMsg;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -377,21 +492,22 @@ public class AdminForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTabbedPane listTab;
     private javax.swing.JPanel listUsersPane;
     private javax.swing.JButton logout;
     private javax.swing.JTextField newPassword;
     private javax.swing.JTextField newRole;
     private javax.swing.JTextField newUserName;
+    private javax.swing.JLabel permErrMsg;
     private javax.swing.JPanel permissionsPane;
     private javax.swing.JButton refreshUserList;
     private javax.swing.JComboBox resources;
+    private javax.swing.JList roleList;
+    private javax.swing.JTextArea roleListArea;
     private javax.swing.JButton update;
+    private javax.swing.JTextArea userListArea;
     // End of variables declaration//GEN-END:variables
 }
