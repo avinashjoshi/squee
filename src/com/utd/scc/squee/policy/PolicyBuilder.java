@@ -348,7 +348,7 @@ public class PolicyBuilder {
 			Policy policy = new Policy(policyId, combiningAlg, description,
 					policyTarget, ruleList);
 			// finally, encode the policy and print it to standard out
-			String policyOutFile = "/home/hadoop/Desktop/" + pID + ".xml";
+			String policyOutFile = "etc/" + pID + ".xml";
 			FileOutputStream out;
 			out = new FileOutputStream(policyOutFile);
 			policy.encode(out, new Indenter());

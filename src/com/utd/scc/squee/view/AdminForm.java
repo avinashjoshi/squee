@@ -31,6 +31,7 @@ public class AdminForm extends javax.swing.JFrame {
      */
     LoginForm lForm;
     DefaultTableModel tableModel;
+    AdminFunctions admin;
 
     public AdminForm(LoginForm lForm) {
         initComponents();
@@ -38,12 +39,13 @@ public class AdminForm extends javax.swing.JFrame {
         myInitComponents();
     }
 
-    public final void myInitComponents() {
+    private void myInitComponents() {
+        admin = new AdminFunctions("etc/role_user_map.xml", null);
         refreshUserRole();
         loadResources();
         tableModel = (DefaultTableModel) roleTable.getModel();
-
         loadRoles();
+
     }
 
     public void setAddErrorMessage(String message) {
@@ -113,16 +115,39 @@ public class AdminForm extends javax.swing.JFrame {
     public void loadRoles() {
         roleListArea.setText("");
         int i;
-        for (i = tableModel.getRowCount()-1; i >= 0; i--) {
+        for (i = tableModel.getRowCount() - 1; i >= 0; i--) {
             tableModel.removeRow(i);
         }
-        
-        AdminFunctions admin = new AdminFunctions("etc/role_user_map.xml", null);
+
+
         ArrayList<Group> listGroups = admin.getLoadDataXml().getGroups();
 
         for (i = 0; i < listGroups.size(); i++) {
             roleListArea.append(listGroups.get(i).getGroupID() + "\n");
-            tableModel.addRow(new Object[]{listGroups.get(i).getGroupID(), true});
+            tableModel.addRow(new Object[]{listGroups.get(i).getGroupID(), false});
+        }
+    }
+
+    public void createPerm() {
+        String selectedResource = (String) resources.getSelectedItem();
+        ArrayList<String> selectedRoles = new ArrayList<String>();
+        int i;
+        Boolean flag = false;
+        for (i = tableModel.getRowCount() - 1; i >= 0; i--) {
+            if (((Boolean) tableModel.getValueAt(i, 1)) == true) {
+                selectedRoles.add((String) tableModel.getValueAt(i, 0));
+                flag = true;
+            }
+        }
+        if (flag) {
+            if (resources.getSelectedIndex() == 0) {
+                setPermErrorMessage("Select at least one resource!");
+            } else {
+                admin.addPolicyFiles(selectedResource, selectedRoles);
+            }
+        } else {
+            //At least one role must be selected
+            setPermErrorMessage("Select at least one role!");
         }
     }
 
@@ -157,7 +182,7 @@ public class AdminForm extends javax.swing.JFrame {
         resources = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        update = new javax.swing.JButton();
+        createPerm = new javax.swing.JButton();
         permErrMsg = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         roleTable = new javax.swing.JTable();
@@ -209,7 +234,7 @@ public class AdminForm extends javax.swing.JFrame {
                     .addGroup(listUsersPaneLayout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                 .addContainerGap())
         );
         listUsersPaneLayout.setVerticalGroup(
@@ -221,7 +246,7 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
                 .addContainerGap())
         );
@@ -274,7 +299,7 @@ public class AdminForm extends javax.swing.JFrame {
             .addGroup(addUserPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         addUserPaneLayout.setVerticalGroup(
             addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -295,7 +320,7 @@ public class AdminForm extends javax.swing.JFrame {
                 .addComponent(addUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
 
         listTab.addTab("Add User to Role", addUserPane);
@@ -306,8 +331,13 @@ public class AdminForm extends javax.swing.JFrame {
 
         jLabel7.setText("Roles:");
 
-        update.setText("Update Permissions");
-        update.setToolTipText("Update the permissions for selected resource");
+        createPerm.setText("Create Policy File");
+        createPerm.setToolTipText("Update the permissions for selected resource");
+        createPerm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createPermActionPerformed(evt);
+            }
+        });
 
         permErrMsg.setForeground(new java.awt.Color(255, 0, 0));
 
@@ -344,23 +374,24 @@ public class AdminForm extends javax.swing.JFrame {
         permissionsPane.setLayout(permissionsPaneLayout);
         permissionsPaneLayout.setHorizontalGroup(
             permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(permissionsPaneLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, permissionsPaneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(resources, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(permissionsPaneLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(resources, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGap(18, 18, 18)
+                        .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(permissionsPaneLayout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(permissionsPaneLayout.createSequentialGroup()
-                        .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(update))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(permErrMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 12, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(createPerm))
+                    .addComponent(permErrMsg, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         permissionsPaneLayout.setVerticalGroup(
             permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -369,16 +400,14 @@ public class AdminForm extends javax.swing.JFrame {
                 .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(permissionsPaneLayout.createSequentialGroup()
-                        .addComponent(resources, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(197, 197, 197)
-                        .addComponent(permErrMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(permissionsPaneLayout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(update)))
+                    .addComponent(resources, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(createPerm)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(permErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -410,7 +439,9 @@ public class AdminForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(listTab)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(listTab, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -428,8 +459,8 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(logout)
                     .addComponent(refreshUserList))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(listTab, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(listTab)
+                .addContainerGap())
         );
 
         pack();
@@ -479,7 +510,7 @@ public class AdminForm extends javax.swing.JFrame {
                 }
 
                 //call AdminFunction.add
-                AdminFunctions admin = new AdminFunctions("etc/role_user_map.xml", null);
+
                 admin.addUserToRole(role, userName);
                 setAddErrorMessage(msg + "Added user to role!");
             }
@@ -505,13 +536,16 @@ public class AdminForm extends javax.swing.JFrame {
         refreshUserRole();
         loadRoles();
     }//GEN-LAST:event_listTabMouseClicked
-    /**
-     * @param args the command line arguments
-     */
+
+    private void createPermActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPermActionPerformed
+        // TODO add your handling code here:
+        createPerm();
+    }//GEN-LAST:event_createPermActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addErrMsg;
     private javax.swing.JButton addUser;
     private javax.swing.JPanel addUserPane;
+    private javax.swing.JButton createPerm;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -536,7 +570,6 @@ public class AdminForm extends javax.swing.JFrame {
     private javax.swing.JComboBox resources;
     private javax.swing.JTextArea roleListArea;
     private javax.swing.JTable roleTable;
-    private javax.swing.JButton update;
     private javax.swing.JTextArea userListArea;
     // End of variables declaration//GEN-END:variables
 }

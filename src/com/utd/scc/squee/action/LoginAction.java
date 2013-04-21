@@ -7,6 +7,7 @@ package com.utd.scc.squee.action;
 import com.utd.scc.squee.crypto.SHA;
 import com.utd.scc.squee.view.AdminForm;
 import com.utd.scc.squee.view.LoginForm;
+import com.utd.scc.squee.view.UserPage;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
@@ -52,6 +53,10 @@ public class LoginAction implements ActionListener, Runnable {
             } else if (((passwordHash = loginForm.getLoadedPassword(userName)) != null)
                     && passwordHash.equals(SHA.SHA512String(password))) {
                 loginForm.setErrorMessage("User " + userName + " authenticated");
+                UserPage uPage;
+                uPage = new UserPage(userName, loginForm);
+                this.loginForm.setVisible(false);
+                uPage.setVisible(true);
                 // Call the User form here
             } else {
                 loginForm.setErrorMessage("Invalid username or password");
