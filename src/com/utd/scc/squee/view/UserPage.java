@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 public class UserPage extends javax.swing.JFrame {
 
      private HashMap<String, ArrayList<String>> queryResourceMapping =  new HashMap<String, ArrayList<String>>();
-    private String queryFileName = "G:\\Spring Classes\\Murat\\queries.txt" ;
+    private String queryFileName = "etc/queries.txt" ;
     private XPDP policyEvaluator ;
     private String[] policyFiles;
     private AdminFunctions adminFunction = null;
@@ -37,6 +37,7 @@ public class UserPage extends javax.swing.JFrame {
         initComponents();
         this.lForm = lForm;
         this.userName =  userName;
+        adminFunction = new AdminFunctions();
         readQueryFile();
     }
     
@@ -58,7 +59,6 @@ public class UserPage extends javax.swing.JFrame {
             bufferReader =  new BufferedReader(reader);
             String line;
             while( (line = bufferReader.readLine()) != null){
-                System.out.println(line);
                 queries.add(line);
             }
             updateQueryList(queries);
@@ -211,10 +211,10 @@ public class UserPage extends javax.swing.JFrame {
         String query = (String) jComboBox1.getSelectedItem();
         ArrayList<String> listOfResourceForQuery = queryResourceMapping.get(query);
         boolean result = false ;
-        result =  adminFunction.checkPermissions("group file name", this.userName, listOfResourceForQuery);
+        result =  adminFunction.checkPermissions("etc/role_user_map.xml", this.userName, listOfResourceForQuery);
         if(result){
             // call the pig execute
-
+            System.out.println("Execute pig script ");
         }else {
             JOptionPane.showMessageDialog(this,
                 "Insufficient Permissions",
