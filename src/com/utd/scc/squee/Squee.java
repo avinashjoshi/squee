@@ -21,7 +21,7 @@ public class Squee {
          * Reads from queries/ folder.
          * Output stored in output/ and dumped to stdout
          */
-        PigExecute.testPigExecute(4);
+        PigExecute.testPigExecute(1);
         
         
         UIHelper.setTitle("GODSe");
