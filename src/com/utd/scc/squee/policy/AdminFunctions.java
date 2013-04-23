@@ -1,13 +1,13 @@
 package com.utd.scc.squee.policy;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AdminFunctions {
 
-    private HashMap<String, ArrayList<String>> policyFiles = null;
+    private String[] policyFiles = null;
     private ArrayList<Member> memberForTheRole = null;
     private ArrayList<Group> role = null;
     private LoadDataXML loadDataXml;
@@ -16,7 +16,8 @@ public class AdminFunctions {
     private String textFileName;
     private XPDP policyEvaluator = null;
     private PolicyBuilder policyBulider = null;
-
+    private String policyDir = "etc/policies";
+    
     public AdminFunctions() {
     }
 
@@ -24,8 +25,8 @@ public class AdminFunctions {
 
         this.xmlFileName = xmFile;
         this.textFileName = textFile;
-        policyFiles = new HashMap<String, ArrayList<String>>();
         loadDataXml = new LoadDataXML(xmlFileName, textFileName);
+        
         loadDataXml.loadDataFromXML();
         policyBulider = new PolicyBuilder();
         memberForTheRole = new ArrayList<Member>();
@@ -33,6 +34,8 @@ public class AdminFunctions {
 
     }
 
+ 
+    
     public void addRole(String newRole) throws FileNotFoundException, IOException {
         //this.role =  new Group(memberForTheRole, role);
         Group newRoleGroup = new Group(memberForTheRole, newRole);
@@ -55,8 +58,7 @@ public class AdminFunctions {
 
     }
 
-    public void addPolicyFiles(String fileName, ArrayList<String> rolesList) {
-        policyFiles.put(fileName, rolesList);
+   public void addPolicyFiles(String fileName, ArrayList<String> rolesList) {
         String[] roles = new String[rolesList.size()];
         int i = 0;
         for (String strng : rolesList) {
@@ -65,17 +67,32 @@ public class AdminFunctions {
         }
         policyBulider.run(fileName, roles);
     }
+    
 
+    public void updatePolicyFiles(){
+        File file = new File("etc/policies");
+        String[] files ;
+        if(file.isDirectory()){
+            files = file.list();
+            if (files.length != 0) {
+                policyFiles = new String[files.length];
+                for (int i = 0; i < files.length; i++) {
+                    policyFiles[i] = policyDir + "/" + files[i];
+                }
+            }
+         }
+    }
+    
     public boolean checkPermissions(String groupFile, String userName, ArrayList<String> resourceList) {
-        String[] policyFilesList = new String[policyFiles.size()];
         boolean[] permit = new boolean[1];
         int i = 0;
         try {
-            for (String resourceName : policyFiles.keySet()) {
-                policyFilesList[i] = "etc/policies/" + resourceName + ".xml";
-                i++;
+            if(policyFiles.length > 0 ){
+                policyEvaluator = new XPDP(policyFiles);
+            
+            }else {
+                policyEvaluator = new XPDP();
             }
-            policyEvaluator = new XPDP(policyFilesList);
             for (String resource : resourceList) {
                 policyEvaluator.run(groupFile, resource, policyEvaluator, userName, permit);
                 if (!permit[0]) {
