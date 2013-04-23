@@ -88,4 +88,39 @@ public class FileHelper {
        return null;
        
     }// getOutputFromFile()
+    
+    
+    /**
+     * 
+     * @param dir
+     * @return 
+     */
+    public static boolean deleteDirectory(String dir)
+    {
+        File dirFile = new File(dir);
+        
+        return deleteDirRecursive(dirFile);
+    }
+    
+    /**
+     * 
+     * @param f
+     * @return 
+     */
+    private static boolean deleteDirRecursive(File f)
+    {   
+        if(!f.exists())
+            return true;
+        
+        if(f.isDirectory())
+        {
+            for(File f1: f.listFiles())
+                deleteDirRecursive(f1);
+        }
+        
+        if(!f.delete())
+            return false;
+        return true;
+    }// 
+    
 }

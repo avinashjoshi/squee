@@ -49,6 +49,12 @@ public class PigExecute {
         queriesFromFile = FileHelper.readFileAsStringArray(qFilepath);
         outputFile = outputFilepathBegin.concat(new Integer(fileIndex).toString());
         
+        if(!FileHelper.deleteDirectory(outputFile))
+        {
+            System.out.println("Unable to delete existing output directory!!");
+            return null;
+        }
+        
         try
         {
             if(!addQueries(queriesFromFile))
