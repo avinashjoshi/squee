@@ -142,7 +142,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Users:"/>
+                <Property name="text" type="java.lang.String" value="All Users:"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -191,7 +191,7 @@
             </Container>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Roles:"/>
+                <Property name="text" type="java.lang.String" value="role: user Mapping"/>
               </Properties>
             </Component>
           </SubComponents>

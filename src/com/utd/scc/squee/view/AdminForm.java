@@ -120,7 +120,7 @@ public class AdminForm extends javax.swing.JFrame {
 
     public void loadRoles() {
         roleListArea.setText("");
-        int i;
+        int i, j;
         for (i = tableModel.getRowCount() - 1; i >= 0; i--) {
             tableModel.removeRow(i);
         }
@@ -129,7 +129,14 @@ public class AdminForm extends javax.swing.JFrame {
         ArrayList<Group> listGroups = admin.getLoadDataXml().getGroups();
 
         for (i = 0; i < listGroups.size(); i++) {
-            roleListArea.append(listGroups.get(i).getGroupID() + "\n");
+            roleListArea.append(listGroups.get(i).getGroupID() + ": ");
+            for(j = 0; j < listGroups.get(i).getMembers().size(); j++){
+                roleListArea.append(listGroups.get(i).getMembers().get(j).getMember());
+                if (j < listGroups.get(i).getMembers().size() - 1 ) {
+                    roleListArea.append(", ");
+                }
+            }
+            roleListArea.append("\n");
             tableModel.addRow(new Object[]{listGroups.get(i).getGroupID(), false});
         }
     }
@@ -211,7 +218,7 @@ public class AdminForm extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Users:");
+        jLabel2.setText("All Users:");
 
         userListArea.setEditable(false);
         userListArea.setBackground(new java.awt.Color(255, 255, 255));
@@ -227,7 +234,7 @@ public class AdminForm extends javax.swing.JFrame {
         roleListArea.setRows(5);
         jScrollPane3.setViewportView(roleListArea);
 
-        jLabel8.setText("Roles:");
+        jLabel8.setText("role: user Mapping");
 
         javax.swing.GroupLayout listUsersPaneLayout = new javax.swing.GroupLayout(listUsersPane);
         listUsersPane.setLayout(listUsersPaneLayout);

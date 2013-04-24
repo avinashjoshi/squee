@@ -38,6 +38,7 @@ public class UserPage extends javax.swing.JFrame {
         initComponents();
         this.lForm = lForm;
         this.userName =  userName;
+        loggedUser.setText("Logged in as: " + userName);
         adminFunction = new AdminFunctions();
         readQueryFile();
     }
@@ -115,11 +116,13 @@ public class UserPage extends javax.swing.JFrame {
         submit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         queryResult = new javax.swing.JTextArea();
+        loggedUser = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Squee | User UI");
-        setMinimumSize(new java.awt.Dimension(400, 413));
+        setMinimumSize(new java.awt.Dimension(500, 420));
         setName("User Area"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(500, 420));
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setText("User UI");
@@ -150,6 +153,8 @@ public class UserPage extends javax.swing.JFrame {
         queryResult.setBorder(null);
         jScrollPane1.setViewportView(queryResult);
 
+        loggedUser.setText("Logged as:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,10 +162,12 @@ public class UserPage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loggedUser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(logout))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(queriesList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -173,7 +180,9 @@ public class UserPage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(logout)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(logout)
+                        .addComponent(loggedUser))
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -234,6 +243,7 @@ public class UserPage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel loggedUser;
     private javax.swing.JButton logout;
     private javax.swing.JComboBox queriesList;
     private javax.swing.JTextArea queryResult;
