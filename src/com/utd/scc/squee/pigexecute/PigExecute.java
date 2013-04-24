@@ -78,7 +78,9 @@ public class PigExecute {
     
     
     /**
-     * 
+     * A unit test function to execute the given query specified
+     * using the query file index.
+     * @param queryIndex Zero-based index into the queries directory.
      */
     public static void testPigExecute(int queryIndex)
     {
@@ -100,14 +102,17 @@ public class PigExecute {
         }
         catch(IOException e) {
             System.out.println("IOException: " + e.getMessage());
-        } 
-    }
+        }
+    }// testPigExecute()
     
     
     /**
-     * 
+     * Add queries supplied as string array into the current PigServer instance.
+     * Also determines and stores the 'alias' of the last statement in the query
+     * list.
      * @param pigQueries
-     * @return
+     * @return false if PigServer has not been instantiated or if the number of
+     * queries is less than or equal to zero, true otherwise.
      * @throws IOException 
      */
     private boolean addQueries(String[] pigQueries) throws IOException {
@@ -126,11 +131,11 @@ public class PigExecute {
 
     
     /**
-     * Executes the pig latin script given as an array of string elements.
-     * 
-     * @param pigScript Array of String elements that contain the pig script
-     *          to be executed
-     * @return 
+     * Executes the pig latin script whose queries are stored into the current
+     * PigServer instance.
+     * @return If execution succeeds, a reference to a string array that holds 
+     * the output of the query. If execution fails or if any private member
+     * variables are invalid then null is returned.
      * @throws IOException 
      */
     private String[] execStoredQueries() throws IOException {
@@ -153,10 +158,13 @@ public class PigExecute {
                 System.out.println("Success executing script...");
                 
                 // read output from file and return as a String object
-                String[] outStr;
-                outStr = FileHelper.readFileAsStringArray(this.outputFile);
-
-                return outStr;
+                String outputFilepath = this.getOutputFilepath(outputFile);
+                if(outputFilepath == null)
+                {
+                    System.out.println("Unable to construct output file path!!");
+                    return null;
+                }
+                return FileHelper.readFileAsStringArray(outputFilepath);
             }
             
             System.out.println("Failed executing script...\n");
@@ -171,8 +179,10 @@ public class PigExecute {
     /**
      * Helper to construct query file path given the file index
      * and check whether that file exists or not.
-     * @param fileIndex
-     * @return 
+     * @param fileIndex Zero-based index into the queries directory
+     * @return null if invalid fileIndex or if query file doesn't exist.
+     * Otherwise a reference to the string containing the fullpath to the
+     * query file is returned.
      */
     private String getFilepathFromIndex(int fileIndex)
     {
@@ -191,6 +201,48 @@ public class PigExecute {
         return fileFullPath;
         
     }// getFilenameFromIndex()
+    
+    
+    /**
+     * 
+     * @param outputDir
+     * @return 
+     */
+    private String getOutputFilepath(String outputDir)
+    {
+        File dirFile;
+        File[] listOfFiles;
+
+        int i = 0;
+        StringBuilder sbldFilepath;
+
+        dirFile = new File(outputDir);
+        if(!dirFile.exists())
+            return null;
+
+        if(!dirFile.isDirectory())
+            return null;
+
+        listOfFiles = dirFile.listFiles();
+        for(; i < listOfFiles.length; ++i)
+        {
+            if(listOfFiles[i].isFile())
+            {
+                if(listOfFiles[i].getName().startsWith("part"))
+                    break;
+            }
+        }// for i
+
+        if(i == listOfFiles.length)
+            return null;
+
+        // construct the file name with dir path
+        sbldFilepath = new StringBuilder(outputDir);
+        sbldFilepath.append('/');
+        sbldFilepath.append(listOfFiles[i].getName());
+        return sbldFilepath.toString();
+       
+    }// getOutputFilepath()
     
     
 }// class PigExec

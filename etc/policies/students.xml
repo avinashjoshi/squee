@@ -37,7 +37,7 @@
       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
         <SubjectAttributeDesignator AttributeId="group" DataType="http://www.w3.org/2001/XMLSchema#string"/>
       </Apply>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">student</AttributeValue>
     </Condition>
   </Rule>
   <Rule RuleId="FinalRule" Effect="Deny"/>

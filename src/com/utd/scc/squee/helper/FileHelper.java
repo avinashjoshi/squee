@@ -15,57 +15,23 @@ import java.io.IOException;
  * @author hduser
  */
 public class FileHelper {
+    
     /**
-     * 
-     * @param filename
-     * @return 
+     * Reads a text file specified using its path name and returns the 
+     * file contents as a string array.
+     * @param filePath Path to file
+     * @return String array of file contents. If error occurs, null is returned.
      */
-    public static String[] readFileAsStringArray(String dirfilename)
+    public static String[] readFileAsStringArray(String filePath)
     {
-       File dirfile;
-       File[] listOfFiles;
        BufferedReader bufReader;
-
-       
-       StringBuilder sbldFilepath;
-       String actualFilePath;
        
        String strLine;
        StringBuilder outStrBuild;
        
-       
-       dirfile = new File(dirfilename);
-       if(!dirfile.exists())
-           return null;
-       
-       if(dirfile.isDirectory())
-       {
-           int i = 0;
-           listOfFiles = dirfile.listFiles();
-           for(; i < listOfFiles.length; ++i)
-           {
-               if(listOfFiles[i].isFile())
-               {
-                   if(listOfFiles[i].getName().startsWith("part"))
-                       break;
-               }
-           }// for i
-           
-           if(i == listOfFiles.length)
-               return null;
-           
-           // construct the file name with dir path
-           sbldFilepath = new StringBuilder(dirfilename);
-           sbldFilepath.append('/');
-           sbldFilepath.append(listOfFiles[i].getName());
-           actualFilePath = sbldFilepath.toString();
-       }
-       else
-           actualFilePath = dirfilename;
-       
        try {
            bufReader = new BufferedReader(
-                   new FileReader(actualFilePath));
+                   new FileReader(filePath));
            
            outStrBuild = new StringBuilder();
            while((strLine = bufReader.readLine()) != null)
@@ -78,22 +44,22 @@ public class FileHelper {
        }
        catch(FileNotFoundException e)
        {
-           System.out.println("Output file " + actualFilePath + " not found!!");
+           System.out.println("Output file " + filePath + " not found!!");
        }
        catch(IOException e)
        {
-           System.out.println("Error reading from " + actualFilePath);
+           System.out.println("Error reading from " + filePath);
        }
        
        return null;
        
-    }// getOutputFromFile()
+    }// readFileAsStringArray()
     
     
     /**
-     * 
-     * @param dir
-     * @return 
+     * Recursive directory deletion.
+     * @param dir Path to directory to be deleted.
+     * @return true/false indicating success or failure to delete the directory.
      */
     public static boolean deleteDirectory(String dir)
     {
@@ -103,7 +69,7 @@ public class FileHelper {
     }
     
     /**
-     * 
+     * Recursive directory delete worker function.
      * @param f
      * @return 
      */
@@ -118,9 +84,7 @@ public class FileHelper {
                 deleteDirRecursive(f1);
         }
         
-        if(!f.delete())
-            return false;
-        return true;
+        return f.delete();
     }// 
     
-}
+}// FileHelper
