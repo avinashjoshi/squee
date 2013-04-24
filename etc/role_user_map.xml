@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Groups>
+    <Group ID="admin">
+        <Member>admin</Member>
+    </Group>
+    <Group ID="student">
+        <Member>avinash</Member>
+    </Group>
+</Groups>

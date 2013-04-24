@@ -32,6 +32,7 @@ public class AdminForm extends javax.swing.JFrame {
     LoginForm lForm;
     DefaultTableModel tableModel;
     AdminFunctions admin;
+    File roleUserMap = new File("etc/role_user_map.xml");
 
     public AdminForm(LoginForm lForm) {
         initComponents();
@@ -40,6 +41,11 @@ public class AdminForm extends javax.swing.JFrame {
     }
 
     private void myInitComponents() {
+        if ( !roleUserMap.exists() || (roleUserMap.length() <= 0) ) {
+            // Just a hanging function.. its ok
+            new AdminFunctions("etc/role_user_map.xml", "etc/default_role_user_map.txt");
+        }
+        //this is the main one... we need to pass null
         admin = new AdminFunctions("etc/role_user_map.xml", null);
         refreshUserRole();
         loadResources();
@@ -193,7 +199,12 @@ public class AdminForm extends javax.swing.JFrame {
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Squee | Administer");
+        setMinimumSize(new java.awt.Dimension(501, 444));
+        setPreferredSize(new java.awt.Dimension(500, 450));
+        setResizable(false);
 
+        listTab.setAutoscrolls(true);
         listTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listTabMouseClicked(evt);
@@ -205,17 +216,15 @@ public class AdminForm extends javax.swing.JFrame {
         userListArea.setEditable(false);
         userListArea.setBackground(new java.awt.Color(255, 255, 255));
         userListArea.setColumns(15);
-        userListArea.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        userListArea.setFont(new java.awt.Font("Ubuntu Mono", 0, 15)); // NOI18N
         userListArea.setRows(3);
-        userListArea.setEnabled(false);
         jScrollPane1.setViewportView(userListArea);
 
         roleListArea.setEditable(false);
         roleListArea.setBackground(new java.awt.Color(255, 255, 255));
         roleListArea.setColumns(15);
-        roleListArea.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        roleListArea.setFont(new java.awt.Font("Ubuntu Mono", 0, 15)); // NOI18N
         roleListArea.setRows(5);
-        roleListArea.setEnabled(false);
         jScrollPane3.setViewportView(roleListArea);
 
         jLabel8.setText("Roles:");
@@ -234,7 +243,7 @@ public class AdminForm extends javax.swing.JFrame {
                     .addGroup(listUsersPaneLayout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
                 .addContainerGap())
         );
         listUsersPaneLayout.setVerticalGroup(
@@ -246,7 +255,7 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
                 .addContainerGap())
         );
@@ -299,7 +308,7 @@ public class AdminForm extends javax.swing.JFrame {
             .addGroup(addUserPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
         addUserPaneLayout.setVerticalGroup(
             addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,7 +329,7 @@ public class AdminForm extends javax.swing.JFrame {
                 .addComponent(addUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         listTab.addTab("Add User to Role", addUserPane);
@@ -385,7 +394,7 @@ public class AdminForm extends javax.swing.JFrame {
                         .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(permissionsPaneLayout.createSequentialGroup()
                                 .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 229, Short.MAX_VALUE))
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(permissionsPaneLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -406,7 +415,7 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(createPerm)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(permErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -440,7 +449,7 @@ public class AdminForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(listTab, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(listTab, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -459,8 +468,8 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(logout)
                     .addComponent(refreshUserList))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(listTab)
-                .addContainerGap())
+                .addComponent(listTab, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();

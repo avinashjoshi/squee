@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AdminFunctions {
 
@@ -26,7 +28,9 @@ public class AdminFunctions {
         this.xmlFileName = xmFile;
         this.textFileName = textFile;
         loadDataXml = new LoadDataXML(xmlFileName, textFileName);
-        
+        if(textFileName != null){
+            initialRoleMapping();
+        }
         loadDataXml.loadDataFromXML();
         policyBulider = new PolicyBuilder();
         memberForTheRole = new ArrayList<Member>();
@@ -34,7 +38,17 @@ public class AdminFunctions {
 
     }
 
- 
+    public void initialRoleMapping(){
+        try {
+            loadDataXml.run();
+            xmlCreator = new XMLCreator(loadDataXml.groups);
+            xmlCreator.run();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(AdminFunctions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AdminFunctions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public void addRole(String newRole) throws FileNotFoundException, IOException {
         //this.role =  new Group(memberForTheRole, role);

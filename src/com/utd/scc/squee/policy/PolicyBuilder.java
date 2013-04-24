@@ -348,7 +348,7 @@ public class PolicyBuilder {
 			Policy policy = new Policy(policyId, combiningAlg, description,
 					policyTarget, ruleList);
 			// finally, encode the policy and print it to standard out
-			String policyOutFile = "etc/" + pID + ".xml";
+			String policyOutFile = "etc/policies/" + pID + ".xml";
 			FileOutputStream out;
 			out = new FileOutputStream(policyOutFile);
 			policy.encode(out, new Indenter());
