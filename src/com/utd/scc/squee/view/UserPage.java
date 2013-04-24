@@ -199,6 +199,7 @@ public class UserPage extends javax.swing.JFrame {
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
 
         // TODO add your handling code here:
+        queryResult.setText("");
         String query = (String) queriesList.getSelectedItem();
         int index = queriesList.getSelectedIndex();
         ArrayList<String> listOfResourceForQuery = queryResourceMapping.get(query);
@@ -238,6 +239,7 @@ public class UserPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
         lForm.setVisible(true);
+        lForm.setErrorMessage("User " + userName + " logged out !!");
     }//GEN-LAST:event_logoutActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
