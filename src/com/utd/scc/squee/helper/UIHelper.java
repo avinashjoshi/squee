@@ -1,12 +1,12 @@
 /*
  * Collaborators:
+ * Arun Agarwal <axa103521@utdallas.edu>
  * Avinash Joshi <axj107420@utdallas.edu>
- * Sandeep Shenoy <sxs115220@utdallas.edu>
  * Shishir Krishnaprasad <sxk116430@utdallas.edu>
  * 
- * (c) 2012 GODSe
+ * (c) 2013 Squee
  */
-package com.utd.itc.godse.helper;
+package com.utd.scc.squee.helper;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +15,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class UIHelper {
 
+    /**
+     * Takes string as an argument and 
+     * 
+     * @param value 
+     */
     public static void setTitle(String value) {
         try {
             // take the menu bar off the jframe
