@@ -44,8 +44,12 @@ public class LoginAction implements ActionListener, Runnable {
             String userName = this.loginForm.getUserNameField();
             String password = this.loginForm.getPasswordField();
             String passwordHash;
-
-            if (userName.equals("admin") && password.equals("admin")) {
+            String rootPasswdHash = "ce5ca673d13b36118d54a7cf13aeb0ca012383bf771e713421b4d1fd841f539a";
+            
+            /*
+             * the default Administrative password is toor
+             */
+            if (userName.equals("root") && SHA.SHA512String(password).equals(rootPasswdHash)) {
                 AdminForm aForm;
                 aForm = new AdminForm(this.loginForm);
                 this.loginForm.setVisible(false);
