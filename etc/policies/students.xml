@@ -37,55 +37,7 @@
       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
         <SubjectAttributeDesignator AttributeId="group" DataType="http://www.w3.org/2001/XMLSchema#string"/>
       </Apply>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">faculty</AttributeValue>
-    </Condition>
-  </Rule>
-  <Rule RuleId="ReadRule2" Effect="Permit">
-    <Target>
-      <Subjects>
-        <AnySubject/>
-      </Subjects>
-      <Resources>
-        <AnyResource/>
-      </Resources>
-      <Actions>
-        <Action>
-          <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">read</AttributeValue>
-            <ActionAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-          </ActionMatch>
-        </Action>
-      </Actions>
-    </Target>
-    <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
-        <SubjectAttributeDesignator AttributeId="group" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-      </Apply>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">student</AttributeValue>
-    </Condition>
-  </Rule>
-  <Rule RuleId="ReadRule3" Effect="Permit">
-    <Target>
-      <Subjects>
-        <AnySubject/>
-      </Subjects>
-      <Resources>
-        <AnyResource/>
-      </Resources>
-      <Actions>
-        <Action>
-          <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">read</AttributeValue>
-            <ActionAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-          </ActionMatch>
-        </Action>
-      </Actions>
-    </Target>
-    <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
-        <SubjectAttributeDesignator AttributeId="group" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-      </Apply>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">guest</AttributeValue>
     </Condition>
   </Rule>
   <Rule RuleId="FinalRule" Effect="Deny"/>

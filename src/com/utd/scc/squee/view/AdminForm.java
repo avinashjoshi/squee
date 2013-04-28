@@ -20,10 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author avinash
- */
 public class AdminForm extends javax.swing.JFrame {
 
     /**
@@ -38,12 +34,46 @@ public class AdminForm extends javax.swing.JFrame {
         initComponents();
         this.lForm = lForm;
         myInitComponents();
+        
     }
 
     private void myInitComponents() {
-        if ( !roleUserMap.exists() || (roleUserMap.length() <= 0) ) {
-            // Just a hanging function.. its ok
-            new AdminFunctions("etc/role_user_map.xml", "etc/default_role_user_map.txt");
+        boolean flag;
+        if (!roleUserMap.exists() || (roleUserMap.length() <= 0)) {
+            FileReader fileReader = null;
+            try {
+                // Just a hanging function.. its ok
+                File defaultMapFd = new File("etc/default_role_user_map.txt");
+                if (defaultMapFd.exists()) {
+                    AdminFunctions adminFunctions;
+                    adminFunctions = new AdminFunctions("etc/role_user_map.xml", "etc/default_role_user_map.txt");
+
+                    fileReader = new FileReader("etc/default_role_user_map.txt");
+                    BufferedReader bufFileReader = new BufferedReader(fileReader);
+                    String line;
+                    while ((line = bufFileReader.readLine()) != null) {
+                        String[] splitLine = line.split(" ");
+                        for (int i = 1; i < splitLine.length; i++) {
+                            addUserToPasswdFile(splitLine[i], SHA.SHA512String(splitLine[i]));
+                        }
+                    }
+                } else {
+                    lForm.setErrorMessage("Please create a space separate role:[users] file - etc/default_role_user_map.txt");
+                }
+
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    if (fileReader != null) {
+                        fileReader.close();
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         //this is the main one... we need to pass null
         admin = new AdminFunctions("etc/role_user_map.xml", null);
@@ -130,9 +160,9 @@ public class AdminForm extends javax.swing.JFrame {
 
         for (i = 0; i < listGroups.size(); i++) {
             roleListArea.append(listGroups.get(i).getGroupID() + ": ");
-            for(j = 0; j < listGroups.get(i).getMembers().size(); j++){
+            for (j = 0; j < listGroups.get(i).getMembers().size(); j++) {
                 roleListArea.append(listGroups.get(i).getMembers().get(j).getMember());
-                if (j < listGroups.get(i).getMembers().size() - 1 ) {
+                if (j < listGroups.get(i).getMembers().size() - 1) {
                     roleListArea.append(", ");
                 }
             }
@@ -221,14 +251,12 @@ public class AdminForm extends javax.swing.JFrame {
         jLabel2.setText("All Users:");
 
         userListArea.setEditable(false);
-        userListArea.setBackground(new java.awt.Color(255, 255, 255));
         userListArea.setColumns(15);
         userListArea.setFont(new java.awt.Font("Ubuntu Mono", 0, 15)); // NOI18N
         userListArea.setRows(3);
         jScrollPane1.setViewportView(userListArea);
 
         roleListArea.setEditable(false);
-        roleListArea.setBackground(new java.awt.Color(255, 255, 255));
         roleListArea.setColumns(15);
         roleListArea.setFont(new java.awt.Font("Ubuntu Mono", 0, 15)); // NOI18N
         roleListArea.setRows(5);
@@ -250,7 +278,7 @@ public class AdminForm extends javax.swing.JFrame {
                     .addGroup(listUsersPaneLayout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
                 .addContainerGap())
         );
         listUsersPaneLayout.setVerticalGroup(
@@ -263,7 +291,7 @@ public class AdminForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(listUsersPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -315,7 +343,7 @@ public class AdminForm extends javax.swing.JFrame {
             .addGroup(addUserPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         addUserPaneLayout.setVerticalGroup(
             addUserPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,7 +364,7 @@ public class AdminForm extends javax.swing.JFrame {
                 .addComponent(addUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         listTab.addTab("Add User to Role", addUserPane);
@@ -401,7 +429,7 @@ public class AdminForm extends javax.swing.JFrame {
                         .addGroup(permissionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(permissionsPaneLayout.createSequentialGroup()
                                 .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 229, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE))
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(permissionsPaneLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -422,7 +450,7 @@ public class AdminForm extends javax.swing.JFrame {
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(createPerm)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(permErrMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -488,6 +516,33 @@ public class AdminForm extends javax.swing.JFrame {
         lForm.setVisible(true);
     }//GEN-LAST:event_logoutActionPerformed
 
+    private boolean addUserToPasswdFile(String userName, String passwdHash) {
+        if (lForm.getLoadedPassword(userName) == null) {
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter(lForm.getPasswdFD(), true);
+                BufferedWriter bufWriter = new BufferedWriter(fileWriter);
+                bufWriter.write(userName + ":" + passwdHash + "\n");
+                lForm.setUserToPass(userName, passwdHash);
+                bufWriter.close();
+                fileWriter.close();
+                return true;
+            } catch (IOException ex) {
+                Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } finally {
+                try {
+                    fileWriter.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminForm.class.getName()).log(Level.SEVERE, null, ex);
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
     private void addUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserActionPerformed
         try {
             // TODO add your handling code here:
@@ -511,17 +566,8 @@ public class AdminForm extends javax.swing.JFrame {
             } else {
 
                 String msg = "";
-                // If user is not admin and not in the loaded list
-                if ((lForm.getLoadedPassword(userName) == null)
-                        && (!userName.equals("admin"))) {
 
-                    //add to etc/passwd file
-                    FileWriter fileWriter = new FileWriter(lForm.getPasswdFD(), true);
-                    BufferedWriter bufWriter = new BufferedWriter(fileWriter);
-                    bufWriter.write(userName + ":" + passwordHash + "\n");
-                    lForm.setUserToPass(userName, passwordHash);
-                    bufWriter.close();
-                    fileWriter.close();
+                if (addUserToPasswdFile(userName, passwordHash)) {
                     msg = "Added new user to file! ";
                 }
 

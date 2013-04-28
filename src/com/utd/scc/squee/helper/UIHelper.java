@@ -16,7 +16,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class UIHelper {
 
     /**
-     * Takes string as an argument and 
+     * Takes string as an argument and sets the title for a MAC machine
      * 
      * @param value 
      */

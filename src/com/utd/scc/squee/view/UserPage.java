@@ -137,7 +137,6 @@ public class UserPage extends javax.swing.JFrame {
         queriesList.setToolTipText("Select Query To Execute");
 
         submit.setText("Submit");
-        submit.setBorder(null);
         submit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitActionPerformed(evt);
@@ -149,7 +148,6 @@ public class UserPage extends javax.swing.JFrame {
         queryResult.setEditable(false);
         queryResult.setColumns(20);
         queryResult.setRows(5);
-        queryResult.setAutoscrolls(true);
         queryResult.setBorder(null);
         jScrollPane1.setViewportView(queryResult);
 

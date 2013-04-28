@@ -3,15 +3,7 @@
     <Group ID="admin">
         <Member>admin</Member>
     </Group>
-    <Group ID="student">
-        <Member>avinash</Member>
-        <Member>avinash1</Member>
-    </Group>
-    <Group ID="staff">
-        <Member>avinash1</Member>
-        <Member>murat</Member>
-    </Group>
-    <Group ID="faculty">
-        <Member>murat</Member>
+    <Group ID="guest">
+        <Member>guest</Member>
     </Group>
 </Groups>
