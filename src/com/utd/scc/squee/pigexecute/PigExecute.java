@@ -18,7 +18,7 @@ public class PigExecute {
     private String outputFile = null;
     
     private final String queryFilepathBegin = "queries/q";
-    private final String outputFilepathBegin = "output/o";
+    private final String outputFilepathBegin = "/output/o";
     
     /**
      * Constructor
