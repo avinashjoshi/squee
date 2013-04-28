@@ -1,20 +1,24 @@
-/*
- * Collaborators:
- * Avinash Joshi <axj107420@utdallas.edu>
- * Sandeep Shenoy <sxs115220@utdallas.edu>
- * Shishir Krishnaprasad <sxk116430@utdallas.edu>
- * 
- * (c) 2012 GODSe
- */
-package com.utd.itc.godse.helper;
+package com.utd.scc.squee.helper;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * Helper file for User Interface initialization.
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
+ */
 public class UIHelper {
 
+    /**
+     * Takes string as an argument and sets the title for a MAC machine
+     * 
+     * @param value 
+     */
     public static void setTitle(String value) {
         try {
             // take the menu bar off the jframe

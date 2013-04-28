@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.utd.scc.squee.action;
 
 import com.utd.scc.squee.crypto.SHA;
@@ -15,8 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author avinash
+ * Helper file for User Interface initialization.
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
  */
 public class LoginAction implements ActionListener, Runnable {
 
@@ -44,8 +43,12 @@ public class LoginAction implements ActionListener, Runnable {
             String userName = this.loginForm.getUserNameField();
             String password = this.loginForm.getPasswordField();
             String passwordHash;
-
-            if (userName.equals("admin") && password.equals("admin")) {
+            String rootPasswdHash = "ce5ca673d13b36118d54a7cf13aeb0ca012383bf771e713421b4d1fd841f539a";
+            
+            /*
+             * the default Administrative password is toor
+             */
+            if (userName.equals("root") && SHA.SHA512String(password).equals(rootPasswdHash)) {
                 AdminForm aForm;
                 aForm = new AdminForm(this.loginForm);
                 this.loginForm.setVisible(false);

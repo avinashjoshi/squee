@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.utd.scc.squee.view;
 
 import com.utd.scc.squee.pigexecute.PigExecute;
@@ -19,8 +15,11 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author arun
+ * User page
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
  */
 public class UserPage extends javax.swing.JFrame {
 
@@ -137,7 +136,6 @@ public class UserPage extends javax.swing.JFrame {
         queriesList.setToolTipText("Select Query To Execute");
 
         submit.setText("Submit");
-        submit.setBorder(null);
         submit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitActionPerformed(evt);
@@ -149,7 +147,6 @@ public class UserPage extends javax.swing.JFrame {
         queryResult.setEditable(false);
         queryResult.setColumns(20);
         queryResult.setRows(5);
-        queryResult.setAutoscrolls(true);
         queryResult.setBorder(null);
         jScrollPane1.setViewportView(queryResult);
 
@@ -199,6 +196,7 @@ public class UserPage extends javax.swing.JFrame {
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
 
         // TODO add your handling code here:
+        queryResult.setText("");
         String query = (String) queriesList.getSelectedItem();
         int index = queriesList.getSelectedIndex();
         ArrayList<String> listOfResourceForQuery = queryResourceMapping.get(query);
@@ -238,6 +236,7 @@ public class UserPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
         lForm.setVisible(true);
+        lForm.setErrorMessage("User " + userName + " logged out !!");
     }//GEN-LAST:event_logoutActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

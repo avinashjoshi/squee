@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Administration functions for AdminUI
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
+ */
 public class AdminFunctions {
 
     private String[] policyFiles = null;
