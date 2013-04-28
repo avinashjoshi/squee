@@ -1,2 +1,2 @@
-A = load '/students.lst' using PigStorage(',') as (name:chararray, email:chararray, idnum:int, major:chararray, level:chararray);
+A = load 'hdfs://localhost:54310/data/students.lst' using PigStorage(',') as (name:chararray, email:chararray, idnum:int, major:chararray, level:chararray);
 B = filter A by (major == 'Computer Science');

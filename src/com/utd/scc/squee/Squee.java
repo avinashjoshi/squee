@@ -23,7 +23,6 @@ import com.utd.scc.squee.view.LoginForm;
 public class Squee {
 
     public static void main(String[] args) {
-
         UIHelper.setTitle("Squee");
         
         LoginForm loginForm = new LoginForm();

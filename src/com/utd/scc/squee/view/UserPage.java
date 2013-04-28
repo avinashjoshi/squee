@@ -211,7 +211,7 @@ public class UserPage extends javax.swing.JFrame {
                 if(resultOfQuery !=  null)
                 showResults(resultOfQuery);
                 else 
-                 showResults(new String[]{"error", "exxcuting"});
+                 showResults(new String[]{"Error", "In Executing Script"});
                 System.out.println("Execute pig script ");
             } catch (IOException ex) {
                 Logger.getLogger(UserPage.class.getName()).log(Level.SEVERE, null, ex);
