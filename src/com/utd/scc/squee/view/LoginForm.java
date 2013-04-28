@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.utd.scc.squee.view;
 
 import com.utd.scc.squee.action.LoginAction;
@@ -17,8 +13,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
- * @author avinash
+ * Initial Login Form - Main program starts here
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
  */
 public final class LoginForm extends javax.swing.JFrame {
 

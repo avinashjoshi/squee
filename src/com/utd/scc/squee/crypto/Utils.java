@@ -4,9 +4,11 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 /**
- * General utilities used by our code
- *
- * @author Avinash Joshi <avinash.joshi@utdallas.edu>
+ * Generic utilities Class
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
  */
 public class Utils {
 

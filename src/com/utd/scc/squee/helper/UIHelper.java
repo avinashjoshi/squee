@@ -1,11 +1,3 @@
-/*
- * Collaborators:
- * Arun Agarwal <axa103521@utdallas.edu>
- * Avinash Joshi <axj107420@utdallas.edu>
- * Shishir Krishnaprasad <sxk116430@utdallas.edu>
- * 
- * (c) 2013 Squee
- */
 package com.utd.scc.squee.helper;
 
 import java.util.logging.Level;
@@ -13,6 +5,13 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * Helper file for User Interface initialization.
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
+ */
 public class UIHelper {
 
     /**

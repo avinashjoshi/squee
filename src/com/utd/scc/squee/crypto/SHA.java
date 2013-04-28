@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.utd.scc.squee.crypto;
 
 import java.security.InvalidKeyException;
@@ -11,8 +7,12 @@ import javax.crypto.spec.SecretKeySpec;
 import sun.misc.BASE64Encoder;
 
 /**
- *
- * @author Avinash Joshi <avinash.joshi@utdallas.edu>
+ * Class file for SHA encryption. Has default return to 
+ * string methods
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
  */
 public class SHA {
 

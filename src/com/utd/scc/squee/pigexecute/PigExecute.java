@@ -1,16 +1,16 @@
 package com.utd.scc.squee.pigexecute;
 
-
+import com.utd.scc.squee.helper.FileHelper;
 import java.io.*;
 import org.apache.pig.PigServer;
 import org.apache.pig.backend.executionengine.*;
 
-import com.utd.scc.squee.helper.FileHelper;
-
-
 /**
- *
- * @author Shishir Prasad
+ * Pig Execution Class file
+ * 
+ * @author Arun Agarwal <axa103521@utdallas.edu>
+ * @author Avinash Joshi <axj107420@utdallas.edu>
+ * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
  */
 public class PigExecute {
     private PigServer pigServer = null;
