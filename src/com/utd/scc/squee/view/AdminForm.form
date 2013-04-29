@@ -55,7 +55,7 @@
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="refreshUserList" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="logout" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -449,7 +449,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Ubuntu" size="24" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Admin UI"/>
+        <Property name="text" type="java.lang.String" value="Administer Squee"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="logout">

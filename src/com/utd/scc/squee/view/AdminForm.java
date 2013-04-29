@@ -461,7 +461,7 @@ public class AdminForm extends javax.swing.JFrame {
         listTab.addTab("Permissions", permissionsPane);
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
-        jLabel1.setText("Admin UI");
+        jLabel1.setText("Administer Squee");
 
         logout.setText("Logout");
         logout.setToolTipText("Click here to Logout");
@@ -493,7 +493,7 @@ public class AdminForm extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(refreshUserList)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(logout)))
                 .addContainerGap())
         );
