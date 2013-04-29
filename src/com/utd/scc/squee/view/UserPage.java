@@ -124,8 +124,6 @@ public class UserPage extends javax.swing.JFrame {
             bufferReader = new BufferedReader(reader);
             String line;
 
-            System.out.println(getFilepathFromIndex(qIndex));
-
             while ((line = bufferReader.readLine()) != null) {
 
                 String[] actQuery = line.split("=");
@@ -135,10 +133,7 @@ public class UserPage extends javax.swing.JFrame {
 
                 if (command.equalsIgnoreCase("load")) {
                     String resource = resourceLong
-                            .replace("'", "")
-                            .replace( resourceFilepathBegin, "")
-                            .replace("data/", "");
-                    System.out.println(resource);
+                            .replace("'", "");
                     resourceFilesForQuery.add(resource);
                 }
 

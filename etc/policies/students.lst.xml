@@ -1,4 +1,4 @@
-<Policy PolicyId="students" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:ordered-permit-overrides">
+<Policy PolicyId="students.lst" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:ordered-permit-overrides">
   <Description>There is a final fall-through rule that always returns Deny.</Description>
   <Target>
     <Subjects>
@@ -7,7 +7,7 @@
     <Resources>
       <Resource>
         <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:anyURI-equal">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">students</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">students.lst</AttributeValue>
           <ResourceAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#anyURI"/>
         </ResourceMatch>
       </Resource>
