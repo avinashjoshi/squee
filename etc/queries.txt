@@ -1,4 +1,4 @@
-Custom
+Custom - Read from queries/q0 file
 List of students who has major computer sciene
 List all students with grade greater than 3.0
 List all students with grade equal to 4.0
