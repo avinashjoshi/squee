@@ -38,14 +38,16 @@ public class PigExecute {
         pigServer = new PigServer(execTypeString);
         Map<String, String> env = System.getenv();
         String strHadoopHome = env.get("HADOOP_HOME");
-        if(strHadoopHome == null)
+        if (strHadoopHome == null) {
             throw new IOException("HADOOP_HOME env var not found!");
+        }
         strHDFSXml = strHadoopHome.concat("/conf/hdfs-site.xml");
         strCoreXml = strHadoopHome.concat("/conf/core-site.xml");
     }
 
     /**
      * Executes a pig query from a file specified by fileIndex.
+     *
      * @param fileIndex
      * @return String array containing the output.
      */
@@ -218,11 +220,10 @@ public class PigExecute {
     }// getFilenameFromIndex()
 
     /**
-     * Returns a Path instance that points to the output directory
-     * on the HDFS.
-     * 
-     * @param outputDir String specifying the relative path 
-     * of the output directory
+     * Returns a Path instance that points to the output directory on the HDFS.
+     *
+     * @param outputDir String specifying the relative path of the output
+     * directory
      * @return
      */
     private Path getOutputFilepath(String outputDir) {
@@ -263,15 +264,14 @@ public class PigExecute {
             if (i == listFiles.length) {
                 return null;
             }
-            
+
             return tempPath;
 
         } catch (IOException e) {
             System.out.println("getOutputFilepath(): IOException " + e.getMessage());
         }
-        
+
         return null;
 
     }// getOutputFilepath()
-    
 }// class PigExec

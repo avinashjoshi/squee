@@ -1,5 +1,6 @@
-List of students who has major computer sciene ; students
-List all students with grade greater than 3.0 ; students ; grades 
-List all students with grade equal to 4.0  ; students ; grades
-List all the courses taught by a faculty ;  faculty ; courses
-List of all courses ; courses
+Custom
+List of students who has major computer sciene
+List all students with grade greater than 3.0
+List all students with grade equal to 4.0
+List all the courses taught by a faculty
+List of all courses

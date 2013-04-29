@@ -16,52 +16,87 @@ import javax.swing.JOptionPane;
 
 /**
  * User page
- * 
+ *
  * @author Arun Agarwal <axa103521@utdallas.edu>
  * @author Avinash Joshi <axj107420@utdallas.edu>
  * @author Shishir Krishnaprasad <sxk116430@utdallas.edu>
  */
 public class UserPage extends javax.swing.JFrame {
 
-     private HashMap<String, ArrayList<String>> queryResourceMapping =  new HashMap<String, ArrayList<String>>();
-    private String queryFileName = "etc/queries.txt" ;
-    private XPDP policyEvaluator ;
+    private HashMap<String, ArrayList<String>> queryResourceMapping = new HashMap<String, ArrayList<String>>();
+    private HashMap<Integer, ArrayList<String>> queryIndexResourceMapping = new HashMap<Integer, ArrayList<String>>();
+    private String queryFileName = "etc/queries.txt";
+    private final String queryFilepathBegin = "queries/q";
+    private final String resourceFilepathBegin = "hdfs://localhost:54310/data/";
+    private XPDP policyEvaluator;
     private String[] policyFiles;
     private AdminFunctions adminFunction = null;
     private String userName;
     LoginForm lForm;
+
     /**
      * Creates new form UserPage
      */
     public UserPage(String userName, LoginForm lForm) {
         initComponents();
         this.lForm = lForm;
-        this.userName =  userName;
+        this.userName = userName;
         loggedUser.setText("Logged in as: " + userName);
         adminFunction = new AdminFunctions();
         readQueryFile();
     }
-    
+
+    /**
+     * Helper to construct query file path given the file index and check
+     * whether that file exists or not.
+     *
+     * @param fileIndex Zero-based index into the queries directory
+     * @return null if invalid fileIndex or if query file doesn't exist.
+     * Otherwise a reference to the string containing the fullpath to the query
+     * file is returned.
+     */
+    private String getFilepathFromIndex(int fileIndex) {
+        if (fileIndex < 0) {
+            return null;
+        }
+
+        File queryFile;
+
+        //String filePath = this.queryFilepathBegin;
+        String fileFullPath = this.queryFilepathBegin.concat(new Integer(fileIndex).toString());
+
+        queryFile = new File(fileFullPath);
+        if (!queryFile.exists()) {
+            return null;
+        }
+
+        return fileFullPath;
+
+    }// getFilenameFromIndex()
+
     /*
      * @param - none
      * @return - void
      * @Function - read the queryFile .
      * 
      */
-    
-    public final void readQueryFile(){
-        ArrayList<String> queries =  new ArrayList<String>();
+    public final void readQueryFile() {
+        ArrayList<String> queries = new ArrayList<String>();
+        int qIndex = 0;
         FileReader reader = null;
         BufferedReader bufferReader = null;
         File file;
-        try {  
+        try {
             file = new File(queryFileName);
             reader = new FileReader(file);
-            bufferReader =  new BufferedReader(reader);
+            bufferReader = new BufferedReader(reader);
             String line;
-            while( (line = bufferReader.readLine()) != null){
+            while ((line = bufferReader.readLine()) != null) {
                 queries.add(line);
+                queryIndexResourceMapping.put(qIndex, getResourcesFromQueryFile(qIndex));
+                qIndex++;
             }
+
             updateQueryList(queries);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(UserPage.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,9 +109,53 @@ public class UserPage extends javax.swing.JFrame {
                 Logger.getLogger(UserPage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    } 
-    
-    
+    }
+
+    private ArrayList<String> getResourcesFromQueryFile(int qIndex) {
+        FileReader reader = null;
+        BufferedReader bufferReader = null;
+        ArrayList<String> resourceFilesForQuery = new ArrayList<String>();
+
+        File file;
+        try {
+
+            file = new File(getFilepathFromIndex(qIndex));
+            reader = new FileReader(file);
+            bufferReader = new BufferedReader(reader);
+            String line;
+
+            System.out.println(getFilepathFromIndex(qIndex));
+
+            while ((line = bufferReader.readLine()) != null) {
+
+                String[] actQuery = line.split("=");
+                String[] sepQuery = actQuery[1].trim().split(" ");
+                String command = sepQuery[0].trim();
+                String resourceLong = sepQuery[1].trim();
+
+                if (command.equalsIgnoreCase("load")) {
+                    String resource = resourceLong
+                            .replace("'data/", "")
+                            .replace(".lst'", "")
+                            .replace("'" + resourceFilepathBegin, "");
+                    System.out.println(resource);
+                    resourceFilesForQuery.add(resource);
+                }
+
+            }
+            return resourceFilesForQuery;
+        } catch (IOException ex) {
+            Logger.getLogger(UserPage.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(UserPage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     /*
      * @Param - List of queries read from the text File
      * @Return - void
@@ -84,22 +163,23 @@ public class UserPage extends javax.swing.JFrame {
      * user excutable queries
      * 
      */
-    
-    public void updateQueryList(ArrayList<String> queries){
-        ArrayList<String> resourceFilesForQuery ;
-        String queryToBeShown ;
-        for(String query : queries){
-            String[] sepQuery =  query.split(";");
-            queryToBeShown =  sepQuery[0];
+    public void updateQueryList(ArrayList<String> queries) {
+        ArrayList<String> resourceFilesForQuery;
+        String queryToBeShown;
+        for (String query : queries) {
+            String[] sepQuery = query.split(";");
+            queryToBeShown = sepQuery[0];
             resourceFilesForQuery = new ArrayList<String>();
-            for(int i = 1; i < sepQuery.length ; i ++){
+            for (int i = 1; i < sepQuery.length; i++) {
                 resourceFilesForQuery.add(sepQuery[i].trim());
             }
             queryResourceMapping.put(queryToBeShown, resourceFilesForQuery);
             queriesList.addItem(queryToBeShown);
+
         }
 
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -199,46 +279,47 @@ public class UserPage extends javax.swing.JFrame {
         queryResult.setText("");
         String query = (String) queriesList.getSelectedItem();
         int index = queriesList.getSelectedIndex();
-        ArrayList<String> listOfResourceForQuery = queryResourceMapping.get(query);
-        boolean result = false ;
+        //ArrayList<String> listOfResourceForQuery = queryResourceMapping.get(query);
+        ArrayList<String> listOfResourceForQuery = queryIndexResourceMapping.get(index);
+        boolean result = false;
         adminFunction.updatePolicyFiles();
-        result =  adminFunction.checkPermissions("etc/role_user_map.xml", this.userName, listOfResourceForQuery);
-        if(result){
+        result = adminFunction.checkPermissions("etc/role_user_map.xml", this.userName, listOfResourceForQuery);
+        if (result) {
             try {
                 // call the pig execute
                 PigExecute pigExec = new PigExecute("local");
                 String[] resultOfQuery = pigExec.execQueryFromFile(index);
-                if(resultOfQuery !=  null)
-                showResults(resultOfQuery);
-                else 
-                 showResults(new String[]{"Error", "In Executing Script"});
+                if (resultOfQuery != null) {
+                    showResults(resultOfQuery);
+                } else {
+                    showResults(new String[]{"Error", "In Executing Script"});
+                }
                 System.out.println("Execute pig script ");
             } catch (IOException ex) {
                 Logger.getLogger(UserPage.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else {
+        } else {
             JOptionPane.showMessageDialog(this,
-                "Insufficient Permissions",
-                "You dont have the required permission to access the query",
-                JOptionPane.ERROR_MESSAGE);
+                    "Insufficient Permissions",
+                    "You dont have the required permission to access the query",
+                    JOptionPane.ERROR_MESSAGE);
         }
         // call the pig script fot the query
 
     }//GEN-LAST:event_submitActionPerformed
 
-    private void showResults(String[] result){
-        for(String line : result){
+    private void showResults(String[] result) {
+        for (String line : result) {
             queryResult.append(line + "\n");
         }
     }
-    
+
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
         lForm.setVisible(true);
         lForm.setErrorMessage("User " + userName + " logged out !!");
     }//GEN-LAST:event_logoutActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
