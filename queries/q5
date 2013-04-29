@@ -1,2 +1,2 @@
-A = load 'hdfs://localhost:54310/data/students.lst' using PigStorage(',') as (name:chararray, email:chararray, idnum:int, major:chararray, level:chararray);
-B = filter A by (major == 'Computer Science');
+A = LOAD 'hdfs://localhost:54310/data/courses.lst' using PigStorage(',');
+B = FOREACH A GENERATE $0, $1, $2;

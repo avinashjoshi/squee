@@ -1,2 +1,4 @@
-A = LOAD 'hdfs://localhost:54310/data/courses.lst' using PigStorage(',');
-B = FOREACH A GENERATE $0, $1, $2;
+A = LOAD 'hdfs://localhost:54310/data/faculty.lst' using PigStorage(',');
+B = LOAD 'hdfs://localhost:54310/data/courses.lst' using PigStorage(',');
+C = JOIN A by $0, B by $2;
+D = FOREACH C GENERATE $0, $5;

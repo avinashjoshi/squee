@@ -1,4 +1,5 @@
-A = LOAD 'hdfs://localhost:54310/data/faculty.lst' using PigStorage(',');
-B = LOAD 'hdfs://localhost:54310/data/courses.lst' using PigStorage(',');
-C = JOIN A by $0, B by $2;
-D = FOREACH C GENERATE $0, $5;
+A = LOAD 'hdfs://localhost:54310/data/students.lst' using PigStorage(',') as (name:chararray, email:chararray, idnum:int, major:chararray, level:chararray);
+B = LOAD 'hdfs://localhost:54310/data/grades.lst' using PigStorage(',') as (sidnum:int, gradeval:float);
+X = JOIN A by idnum, B by sidnum;
+Y = FILTER X by (gradeval == 4.0);
+Z = FOREACH Y GENERATE name, gradeval;
