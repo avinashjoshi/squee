@@ -1,4 +1,4 @@
-students
-faculty
-courses
-grades
+students.lst
+faculty.lst
+courses.lst
+grades.lst

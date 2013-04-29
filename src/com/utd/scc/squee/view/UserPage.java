@@ -135,9 +135,9 @@ public class UserPage extends javax.swing.JFrame {
 
                 if (command.equalsIgnoreCase("load")) {
                     String resource = resourceLong
-                            .replace("'data/", "")
-                            .replace(".lst'", "")
-                            .replace("'" + resourceFilepathBegin, "");
+                            .replace("'", "")
+                            .replace( resourceFilepathBegin, "")
+                            .replace("data/", "");
                     System.out.println(resource);
                     resourceFilesForQuery.add(resource);
                 }
@@ -287,7 +287,8 @@ public class UserPage extends javax.swing.JFrame {
         if (result) {
             try {
                 // call the pig execute
-                PigExecute pigExec = new PigExecute("local");
+                //PigExecute pigExec = new PigExecute("local");
+                PigExecute pigExec = new PigExecute("mapreduce");
                 String[] resultOfQuery = pigExec.execQueryFromFile(index);
                 if (resultOfQuery != null) {
                     showResults(resultOfQuery);
