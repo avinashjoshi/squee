@@ -25,7 +25,7 @@ public class PigExecute {
     private String strHDFSXml = null;
     private String strCoreXml = null;
     private final String queryFilepathBegin = "queries/q";
-    private final String outputFilepathBegin = "hdfs://localhost:54310/output/o";
+    private final String outputFilepathBegin = "/output/o";
 
     /**
      * Constructor

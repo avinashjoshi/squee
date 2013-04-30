@@ -75,7 +75,7 @@ public class UserPage extends javax.swing.JFrame {
 
     }// getFilenameFromIndex()
 
-    /*
+    /**
      * @param - none
      * @return - void
      * @Function - read the queryFile .
@@ -112,6 +112,12 @@ public class UserPage extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * 
+     * @param int Index of query file from queries folder
+     * @return ArrayList<String> array list of the resources that 
+     * the queries in the file with LOAD command use
+     */
     private ArrayList<String> getResourcesFromQueryFile(int qIndex) {
         FileReader reader = null;
         BufferedReader bufferReader = null;

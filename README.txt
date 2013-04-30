@@ -44,9 +44,9 @@ followed are given below:
   After formatting, execute "<hadoop_home_dir>/bin/start-all.sh" and see if all required processes
   are running using the "jps" command.
 - Creating the resource files and output directory in HDFS.
-  $ hadoop fs -mkdir /data	; creates directory "data" in the root of the HDFS.
+  $ hadoop fs -mkdir /user/<username>	; creates directory "data" in the root of the HDFS.
   $ hadoop fs -mkdir /output
-  $ hadoop fs -put <local_resource_file_path> /data/	; copies resource file from local FS to HDFS
+  $ hadoop fs -put <local_resource_file_path> /user/<username>/	; copies resource file from local FS to HDFS
 - Ensure "<hadoop_home_dir>/hadoop-core-1.0.4.jar" and "<hadoop_home_dir>/conf" are present in the
   CLASSPATH.
 
